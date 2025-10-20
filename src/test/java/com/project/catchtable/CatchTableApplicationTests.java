@@ -9,5 +9,4 @@ class CatchTableApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
