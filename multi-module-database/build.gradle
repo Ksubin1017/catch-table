@@ -1,0 +1,12 @@
+dependencies {
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
