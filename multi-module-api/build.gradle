@@ -1,5 +1,11 @@
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+plugins {
+    id("java-common-conventions")
+    id("org.springframework.boot")
 }
 
-//tasks.register("prepareKotlinBuildScriptModel"){}
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation project(':multi-module-database')
+}
+
+tasks.register("prepareKotlinBuildScriptModel"){}
