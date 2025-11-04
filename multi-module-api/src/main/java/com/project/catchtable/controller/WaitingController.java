@@ -15,9 +15,9 @@ public class WaitingController {
 
     @GetMapping("/restaurant/{category}")
     public ResponseEntity<CommonResp<RestaurantListDTO>> getRestaurantCategory(@PathVariable("category") String category) {
-        List<restaurantItemListDTO> restaurantItemListDTO = new ArrayList<>();
+        List<RestaurantItemListDTO> restaurantItemListDTO = new ArrayList<>();
 
-        com.project.multimoduledatabase.dto.restaurantItemListDTO restaurant = com.project.multimoduledatabase.dto.restaurantItemListDTO.builder()
+        RestaurantItemListDTO restaurant = RestaurantItemListDTO.builder()
                 .restaurantId(1L)
                 .restaurantName("김밥천국")
                 .restaurantAddr("서울특별시 강남구 테헤란로 17")

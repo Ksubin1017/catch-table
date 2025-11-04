@@ -9,7 +9,6 @@ import com.project.multimoduledatabase.enums.WaitingStatus;
 import com.project.multimoduledatabase.repository.CustomerRepository;
 import com.project.multimoduledatabase.repository.RestaurantRepository;
 import com.project.multimoduledatabase.repository.WaitingRepository;
-import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceTest {
+public class WaitingServiceTest {
 
     @Mock private WaitingRepository waitingRepository;
     @Mock private RestaurantRepository restaurantRepository;

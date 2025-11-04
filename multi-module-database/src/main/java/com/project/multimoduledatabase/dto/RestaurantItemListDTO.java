@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class restaurantItemListDTO {
+public class RestaurantItemListDTO {
     private Long restaurantId;
     private String restaurantName;
     private String restaurantAddr;

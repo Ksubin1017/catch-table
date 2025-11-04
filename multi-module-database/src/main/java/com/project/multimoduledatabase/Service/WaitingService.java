@@ -33,10 +33,10 @@ public class WaitingService {
     public RestaurantListDTO getRestaurantList(String category){
         List<RestaurantEntity> restaurantEntityList = restaurantRepository.findByCategory(category);
 
-        List<restaurantItemListDTO> restaurantItemList = new ArrayList<>();
+        List<RestaurantItemListDTO> restaurantItemList = new ArrayList<>();
 
         for(RestaurantEntity restaurantEntity : restaurantEntityList){
-            restaurantItemListDTO restaurantItem = restaurantItemListDTO.builder()
+            RestaurantItemListDTO restaurantItem = RestaurantItemListDTO.builder()
                     .restaurantId(restaurantEntity.getId())
                     .restaurantName(restaurantEntity.getRestaurantName())
                     .restaurantAddr(restaurantEntity.getRestaurantAddr())
@@ -62,7 +62,8 @@ public class WaitingService {
     public RestaurantDetailDTO getRestaurantDetail(Long restaurantId){
         RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 식당입니다."));
-        List<MenuEntity> menuEntity = menuRepository.findByRestaurant_RestaurantId(restaurantId);
+        List<MenuEntity> menuEntity = menuRepository.findByRestaurant_id(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("메뉴가 존재하지 않습니다."));
 
         List<MenuDTO> menuList = new ArrayList<>();
 
