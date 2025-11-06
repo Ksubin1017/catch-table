@@ -1,0 +1,9 @@
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1396
+    volumes:
+      - /Users/ksubin/develop/catch-table-db:/var/lib/mysql
+    ports:
+      - 3306:3306

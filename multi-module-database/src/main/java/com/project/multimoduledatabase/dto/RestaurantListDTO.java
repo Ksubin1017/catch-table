@@ -9,5 +9,5 @@ import java.util.List;
 @Builder
 public class RestaurantListDTO {
 
-    private List<restaurantItemListDTO> restaurantItems;
+    private List<RestaurantItemListDTO> restaurantItems;
 }
