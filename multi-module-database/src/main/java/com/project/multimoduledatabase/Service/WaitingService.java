@@ -5,6 +5,7 @@ import com.project.multimoduledatabase.entity.CustomerEntity;
 import com.project.multimoduledatabase.entity.MenuEntity;
 import com.project.multimoduledatabase.entity.RestaurantEntity;
 import com.project.multimoduledatabase.entity.WaitingEntity;
+import com.project.multimoduledatabase.enums.RestaurantCategory;
 import com.project.multimoduledatabase.enums.WaitingStatus;
 import com.project.multimoduledatabase.repository.CustomerRepository;
 import com.project.multimoduledatabase.repository.MenuRepository;
@@ -30,17 +31,17 @@ public class WaitingService {
     private final CustomerRepository customerRepository;
 
     @Transactional(readOnly = true)
-    public RestaurantListDTO getRestaurantList(String category){
+    public List<RestaurantListItemDTO> getRestaurantList(RestaurantCategory category){
         List<RestaurantEntity> restaurantEntityList = restaurantRepository.findByCategory(category);
 
-        List<RestaurantItemListDTO> restaurantItemList = new ArrayList<>();
+        List<RestaurantListItemDTO> restaurantItemList = new ArrayList<>();
 
         for(RestaurantEntity restaurantEntity : restaurantEntityList){
-            RestaurantItemListDTO restaurantItem = RestaurantItemListDTO.builder()
-                    .restaurantId(restaurantEntity.getId())
-                    .restaurantName(restaurantEntity.getRestaurantName())
-                    .restaurantAddr(restaurantEntity.getRestaurantAddr())
-                    .restaurantImage(restaurantEntity.getRestaurantImage())
+            RestaurantListItemDTO restaurantItem = RestaurantListItemDTO.builder()
+                    .id(restaurantEntity.getId())
+                    .name(restaurantEntity.getName())
+                    .addr(restaurantEntity.getAddr())
+                    .image(restaurantEntity.getImage())
                     .category(restaurantEntity.getCategory())
                     .price(restaurantEntity.getPrice())
                     .businessHours(BusinessHoursDTO.builder()
@@ -52,10 +53,7 @@ public class WaitingService {
             restaurantItemList.add(restaurantItem);
         }
 
-
-        return RestaurantListDTO.builder()
-                .restaurantItems(restaurantItemList)
-                .build();
+        return restaurantItemList;
     }
 
     @Transactional(readOnly = true)
@@ -70,19 +68,19 @@ public class WaitingService {
         for(MenuEntity menuItem : menuEntity){
             MenuDTO menu = MenuDTO.builder()
                     .id(menuItem.getId())
-                    .menuName(menuItem.getMenuName())
-                    .menuPrice(menuItem.getMenuPrice())
-                    .menuImage(menuItem.getMenuImage())
+                    .name(menuItem.getName())
+                    .price(menuItem.getPrice())
+                    .image(menuItem.getImage())
                     .build();
 
             menuList.add(menu);
         }
 
         return RestaurantDetailDTO.builder()
-                .restaurantId(restaurantId)
-                .restaurantImage(restaurantEntity.getRestaurantImage())
-                .restaurantName(restaurantEntity.getRestaurantName())
-                .restaurantAddr(restaurantEntity.getRestaurantAddr())
+                .id(restaurantId)
+                .image(restaurantEntity.getImage())
+                .name(restaurantEntity.getName())
+                .addr(restaurantEntity.getAddr())
                 .menuList(menuList)
                 .businessHours(BusinessHoursDTO.builder()
                         .open(restaurantEntity.getOpenTime())
@@ -122,7 +120,7 @@ public class WaitingService {
                 .customerId(customerEntity.getId())
                 .customerName(customerEntity.getCustomerName())
                 .restaurantId(restaurantEntity.getId())
-                .restaurantName(restaurantEntity.getRestaurantName())
+                .restaurantName(restaurantEntity.getName())
                 .waitingId(savedWaiting.getId())
                 .waitingNumber(savedWaiting.getWaitingNumber())
                 .remainingTeamCount(getRemainingTeamCount(savedWaiting.getId()))
@@ -144,7 +142,7 @@ public class WaitingService {
         return WaitingCancelRespDTO.builder()
                 .waitingId(waitingId)
                 .restaurantId(restaurantId)
-                .restaurantName(restaurantEntity.getRestaurantName())
+                .restaurantName(restaurantEntity.getName())
                 .customerId(commonWaitingReq.getCustomerId())
                 .customerName(customerEntity.getCustomerName())
                 .status(WaitingStatus.CANCELED)
@@ -163,7 +161,7 @@ public class WaitingService {
 
         return WaitingOverviewDTO.builder()
                 .restaurantId(restaurantId)
-                .restaurantName(restaurantEntity.getRestaurantName())
+                .restaurantName(restaurantEntity.getName())
                 .estimatedWaitingTime("1시간")
                 .remainingTeamCount(remainingTeam)
                 .build();
@@ -182,7 +180,7 @@ public class WaitingService {
                 .customerId(commonWaitingReq.getCustomerId())
                 .customerName(customerEntity.getCustomerName())
                 .restaurantId(restaurantId)
-                .restaurantName(restaurantEntity.getRestaurantName())
+                .restaurantName(restaurantEntity.getName())
                 .waitingId(waitingEntity.getId())
                 .waitingNumber(waitingEntity.getWaitingNumber())
                 .remainingTeamCount(getRemainingTeamCount(waitingEntity.getId()))
