@@ -37,11 +37,6 @@ public class RestaurantControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
     @Test
     @DisplayName("카테고리별 식당 조회 - KOREAN")
     void getRestaurants() throws Exception {

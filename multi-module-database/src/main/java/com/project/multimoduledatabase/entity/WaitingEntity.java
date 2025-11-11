@@ -7,7 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -30,8 +31,10 @@ public class WaitingEntity {
     @Enumerated(EnumType.STRING)
     private WaitingStatus status;
 
+    private int partySize;
     private int waitingNumber;
-    private LocalDateTime registeredAt;
+    private LocalDate registeredDate;
+    private LocalTime registeredTime;
 
     public void updateStatus(WaitingStatus status) {
         this.status = status;

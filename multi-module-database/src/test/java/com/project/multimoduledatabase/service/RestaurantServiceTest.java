@@ -5,6 +5,7 @@ import com.project.multimoduledatabase.dto.RestaurantDetailDTO;
 import com.project.multimoduledatabase.dto.RestaurantListItemDTO;
 import com.project.multimoduledatabase.entity.MenuEntity;
 import com.project.multimoduledatabase.entity.RestaurantEntity;
+import com.project.multimoduledatabase.enums.RestaurantCategory;
 import com.project.multimoduledatabase.repository.MenuRepository;
 import com.project.multimoduledatabase.repository.RestaurantRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,10 +68,10 @@ public class RestaurantServiceTest {
         // given
         String category = "한식";
         List<RestaurantEntity> koreanRestaurants = restaurantDataByCategory.get(category);
-        given(restaurantRepository.findByCategory(category)).willReturn(koreanRestaurants);
+        given(restaurantRepository.findByCategory(RestaurantCategory.KOREAN)).willReturn(koreanRestaurants);
 
         // when
-        List<RestaurantListItemDTO> result = restaurantService.getRestaurantList(category);
+        List<RestaurantListItemDTO> result = restaurantService.getRestaurantList(RestaurantCategory.KOREAN);
 
         // then
         assertThat(result).isNotNull();
@@ -99,7 +100,7 @@ public class RestaurantServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(restaurantId);
         assertThat(result.getName()).isEqualTo("맛있는 한식당");
-        assertThat(result.isOpen()).isTrue();
+        assertThat(result.getIsOpen()).isTrue();
     }
 
     private void initTestData() {
@@ -108,7 +109,7 @@ public class RestaurantServiceTest {
                 .name("맛있는 한식당")
                 .addr("서울시 강남구")
                 .image("image1.jpg")
-                .category("한식")
+                .category(RestaurantCategory.KOREAN)
                 .price(20000)
                 .openTime("09:00")
                 .closeTime("22:00")
@@ -119,7 +120,7 @@ public class RestaurantServiceTest {
                 .name("전통 한식집")
                 .addr("서울시 서초구")
                 .image("image2.jpg")
-                .category("한식")
+                .category(RestaurantCategory.KOREAN)
                 .price(15000)
                 .openTime("10:00")
                 .closeTime("21:00")
@@ -130,7 +131,7 @@ public class RestaurantServiceTest {
                 .name("이탈리안 레스토랑")
                 .addr("서울시 종로구")
                 .image("image3.jpg")
-                .category("양식")
+                .category(RestaurantCategory.WESTERN)
                 .price(20000)
                 .openTime("11:00")
                 .closeTime("23:00")
@@ -141,7 +142,7 @@ public class RestaurantServiceTest {
                 .name("스시 전문점")
                 .addr("서울시 마포구")
                 .image("image4.jpg")
-                .category("일식")
+                .category(RestaurantCategory.JAPANESE)
                 .price(50000)
                 .openTime("12:00")
                 .closeTime("22:00")
