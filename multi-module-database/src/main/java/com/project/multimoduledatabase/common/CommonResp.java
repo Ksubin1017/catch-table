@@ -1,4 +1,4 @@
-package com.project.multimoduledatabase.dto;
+package com.project.multimoduledatabase.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuDTO {
-
-    private Long id;
-    private String name;
-    private int price;
-    private String image;
+public class CommonResp<T> {
+    private int code;
+    private String message;
+    private T data;
 }

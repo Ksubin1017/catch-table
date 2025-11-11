@@ -1,5 +1,6 @@
 package com.project.multimoduledatabase.repository;
 
+import com.project.multimoduledatabase.entity.RestaurantEntity;
 import com.project.multimoduledatabase.entity.WaitingEntity;
 import com.project.multimoduledatabase.enums.WaitingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,37 +10,27 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface WaitingRepository extends JpaRepository<WaitingEntity, Long> {
 
-    // 현재 대기팀 수
-    int countByRestaurantIdAndStatusAndRegisteredAtLessThan(Long restaurantId,
-                                                            WaitingStatus status,
-                                                            LocalDateTime registeredAt);
+    // 현재 대기 팀 수 - 등록 시
+    int countByRestaurantAndRegisteredDateAndStatusAndWaitingNumberLessThan(
+            RestaurantEntity restaurant,
+            LocalDate registeredDate,
+            WaitingStatus status,
+            int waitingNumber
+    );
 
-    // 웨이팅 번호 지정
-    @Query("SELECT MAX(w.waitingNumber) FROM WaitingEntity w " +
-            "WHERE w.restaurant.id = :restaurantId " +
-            "AND DATE(w.registeredAt) = :registeredDate " +
-            "AND w.status = 'APPLIED'")
-    Optional<Integer> findMaxWaitingNumberByRestaurantIdAndRegisteredAt(
-            @Param("restaurantId") Long restaurantId,
-            @Param("registeredDate") LocalDate registeredDate);
+    // 현재 대기 팀 수 - OverView 시
+    int countByRestaurantAndStatusAndRegisteredDate(RestaurantEntity restaurant, WaitingStatus status, LocalDate registeredDate);
 
-    WaitingEntity findByIdAndStatus(Long id,
-                                    WaitingStatus status);
+    // 웨이팅 번호 발급
+    int countByRegisteredDate(LocalDate date);
 
-    @Query("SELECT COUNT(w) FROM WaitingEntity w " +
-            "WHERE w.restaurant.id = :restaurantId " +
-            "AND w.status = :status " +
-            "AND w.registeredAt >= :startOfDay " +
-            "AND w.registeredAt < :endOfDay")
-    int countByRestaurantIdAndStatusAndDateRange(
-            @Param("restaurantId") Long restaurantId,
-            @Param("status") WaitingStatus status,
-            @Param("startOfDay") LocalDateTime startOfDay,
-            @Param("endOfDay") LocalDateTime endOfDay);
-
+    Optional<WaitingEntity> findByIdAndStatus(Long waitingId, WaitingStatus waitingStatus);
+    WaitingEntity findByCustomer_Id(Long customerId);
 }
