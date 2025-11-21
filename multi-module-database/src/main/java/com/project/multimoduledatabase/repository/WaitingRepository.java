@@ -33,4 +33,6 @@ public interface WaitingRepository extends JpaRepository<WaitingEntity, Long> {
 
     Optional<WaitingEntity> findByIdAndStatus(Long waitingId, WaitingStatus waitingStatus);
     WaitingEntity findByCustomer_Id(Long customerId);
+
+    int countByCustomer_IdAndRestaurant_IdAndStatus(Long customerId, Long restaurantId, WaitingStatus waitingStatus);
 }
