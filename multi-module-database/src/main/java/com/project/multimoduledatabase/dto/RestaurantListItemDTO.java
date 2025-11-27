@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantListItemDTO {
@@ -17,7 +18,7 @@ public class RestaurantListItemDTO {
     private String image;
     private RestaurantCategory category;
     private int price;
-    private BusinessHoursDTO businessHours;
     private Boolean isOpen;
+    private BusinessHoursDTO businessHours;
 
 }
