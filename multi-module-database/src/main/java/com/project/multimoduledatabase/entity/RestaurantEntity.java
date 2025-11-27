@@ -1,5 +1,6 @@
 package com.project.multimoduledatabase.entity;
 
+import com.project.multimoduledatabase.enums.RestaurantCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,17 +18,18 @@ public class RestaurantEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "restaurant_name", nullable = false)
-    private String restaurantName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "restaurant_address", nullable = false)
-    private String restaurantAddr;
+    @Column(name = "address", nullable = false)
+    private String addr;
 
-    @Column(name = "restaurant_image", nullable = false)
-    private String restaurantImage;
+    @Column(name = "image", nullable = false)
+    private String image;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
-    private String category;
+    private RestaurantCategory category;
 
     @Column(name = "price", nullable = false)
     private int price;
@@ -37,4 +39,7 @@ public class RestaurantEntity {
 
     @Column(name = "close_time", nullable = false)
     private String closeTime;
+
+    @Column(name = "webhook_url")
+    private String webhookUrl;
 }

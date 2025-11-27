@@ -3,8 +3,13 @@ plugins {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
+    // 슬랙
+    implementation("com.slack.api:bolt:1.18.0")
+    implementation("com.slack.api:bolt-servlet:1.18.0")
+    implementation("com.slack.api:bolt-jetty:1.18.0")
     testImplementation 'org.assertj:assertj-core:3.24.2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 }
