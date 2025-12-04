@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantEntity {
@@ -42,4 +41,5 @@ public class RestaurantEntity {
 
     @Column(name = "webhook_url")
     private String webhookUrl;
+
 }

@@ -22,35 +22,25 @@ public class RestaurantOwnerController {
     @GetMapping("/restaurant/{restaurantId}/waiting/status/owner")
     public ResponseEntity<CommonResp<RestaurantWaitingStatusOwnerDTO>> getRestaurantStatusOwner(@PathVariable(name = "restaurantId") Long restaurantId) {
 
-        CommonResp<RestaurantWaitingStatusOwnerDTO> resp = CommonResp.<RestaurantWaitingStatusOwnerDTO>builder()
-                .code(1000)
-                .message(CommonMessage.GET_RESTAURANT_STATUS_OWNER_SUCC)
-                .data(restaurantOwnerService.getRestaurantWaitingStatusOwner(restaurantId))
-                .build();
+        CommonResp<RestaurantWaitingStatusOwnerDTO> resp = new CommonResp<>(
+                1000,
+                CommonMessage.GET_RESTAURANT_STATUS_OWNER_SUCC,
+                restaurantOwnerService.getRestaurantWaitingStatusOwner(restaurantId)
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(resp);
     }
 
     @PostMapping("/waiting/call")
     public ResponseEntity<CommonResp<Object>> callWaiting(@RequestBody WaitingCallReqDTO waitingCallReqDTO) {
-        try {
-            restaurantOwnerService.callWaiting(waitingCallReqDTO);
+        restaurantOwnerService.callWaiting(waitingCallReqDTO);
 
-            CommonResp<Object> resp = CommonResp.builder()
-                    .code(1000)
-                    .message(CommonMessage.CALL_WAITING_SUCC)
-                    .data(null)
-                    .build();
+        CommonResp<Object> resp = new CommonResp<>(
+                1000,
+                CommonMessage.CALL_WAITING_SUCC,
+                null
+        );
 
-            return ResponseEntity.status(HttpStatus.OK).body(resp);
-        } catch (Exception e) {
-            CommonResp<Object> resp = CommonResp.builder()
-                    .code(1001)
-                    .message(CommonMessage.CALL_WAITING_FAIL)
-                    .data(null)
-                    .build();
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.OK).body(resp);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(resp);
     }
 }

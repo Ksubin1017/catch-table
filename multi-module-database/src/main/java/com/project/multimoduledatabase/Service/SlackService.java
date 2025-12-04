@@ -25,49 +25,24 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @RequiredArgsConstructor
 public class SlackService {
-    @Value(value = "${slack_token}")
-    String slackToken;
 
-    ObjectMapper mapper = new ObjectMapper();
+    public void sendMessage(RestaurantEntity restaurant, int waitingNumber, int nextWaitingNumber, String webhookUrl) {
+        try {
+            Slack slack = Slack.getInstance();
 
-    public String getSlackUserId(String email) throws JsonProcessingException {
-        System.out.println("encode email: " +  URLEncoder.encode(email, StandardCharsets.UTF_8));
-        String url = "https://slack.com/api/users.lookupByEmail?email=" + email;
+            String payload = "{\"text\": \"" + "[" + restaurant.getName() + "]"
+                    + "\n" + waitingNumber + "번 고객님, 입장해주세요." + "\"}";
+            slack.send(webhookUrl, payload);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(slackToken);
+            if (nextWaitingNumber != 0) {
+                String payload2 = "{\"text\": \""
+                        + "[" + restaurant.getName() + "]\\n"
+                        + nextWaitingNumber + "번 고객님, 다음 차례 입장입니다. 앞에서 대기해주세요.\"}";
+                slack.send(webhookUrl, payload2);
+            }
 
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<String> response = new RestTemplate().exchange(
-                url,
-                HttpMethod.GET,
-                entity,
-                String.class
-        );
-
-        String resp = response.getBody();
-        JsonNode body = mapper.readTree(response.getBody());
-        System.out.println("Slack Response: " + resp);
-
-        if (body.get("ok").asBoolean()) {
-            System.out.println("Slack Response: " + resp);
-            return body.get("user").get("id").textValue();
-        }
-        else
-            return null;
-    }
-
-    public void sendMessage(RestaurantEntity restaurant, int waitingNumber, int nextWaitingNumber, String webhookUrl) throws IOException {
-        Slack slack = Slack.getInstance();
-
-        String payload = "{\"text\": \"" + "[" + restaurant.getName() + "]" + "\n" + waitingNumber + "번 고객님, 입장해주세요." + "\"}";
-        WebhookResponse response = slack.send(webhookUrl, payload);
-
-        if(nextWaitingNumber != 0) {
-            String payload2 = "{\"text\": \""
-                    + "[" + restaurant.getName() + "]\\n"
-                    + nextWaitingNumber + "번 고객님, 다음 차례 입장입니다. 앞에서 대기해주세요.\"}";
-            response = slack.send(webhookUrl, payload2);
+        } catch (IOException e) {
+            throw new RuntimeException("Slack 메시지 전송 실패: " + e.getMessage(), e);
         }
     }
 }

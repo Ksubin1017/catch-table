@@ -20,30 +20,28 @@ public class WaitingController {
                                                                               @RequestBody WaitingRegisterReqDTO waitingRegisterReq) {
 
         WaitingRegisterRespDTO waitingRegisterResp = waitingService.registerWaiting(restaurantId
-                                                                                    , waitingRegisterReq.getCustomerId()
-                                                                                    , waitingRegisterReq.getPartySize());
+                , waitingRegisterReq.getCustomerId()
+                , waitingRegisterReq.getPartySize());
 
-        CommonResp<WaitingRegisterRespDTO> resp = CommonResp.<WaitingRegisterRespDTO>builder()
-                .code(1000)
-                .message(CommonMessage.REGISTER_WAITING_SUCC)
-                .data(waitingRegisterResp)
-                .build();
+        CommonResp<WaitingRegisterRespDTO> resp = new CommonResp(
+                1000,
+                CommonMessage.REGISTER_WAITING_SUCC,
+                waitingRegisterResp);
 
         return ResponseEntity.status(HttpStatus.OK).body(resp);
     }
 
     @PostMapping("/restaurant/{restaurantId}/waiting/{waitingId}/cancel")
     public ResponseEntity<CommonResp<WaitingCancelRespDTO>> cancelWaiting(@PathVariable("restaurantId") Long restaurantId,
-                                                                           @PathVariable("waitingId") Long waitingId,
-                                                                           @RequestBody CommonWaitingReqDTO waitingCancel) {
+                                                                          @PathVariable("waitingId") Long waitingId,
+                                                                          @RequestBody CommonWaitingReqDTO waitingCancel) {
 
         WaitingCancelRespDTO waitingCancelResp = waitingService.cancelWaiting(restaurantId, waitingId, waitingCancel);
 
-        CommonResp<WaitingCancelRespDTO> resp = CommonResp.<WaitingCancelRespDTO>builder()
-                .code(1000)
-                .message(CommonMessage.CANCEL_WAITING_SUCC)
-                .data(waitingCancelResp)
-                .build();
+        CommonResp<WaitingCancelRespDTO> resp = new CommonResp(
+                1000,
+                CommonMessage.CANCEL_WAITING_SUCC,
+                waitingCancelResp);
 
         return ResponseEntity.status(HttpStatus.OK).body(resp);
     }
@@ -53,27 +51,25 @@ public class WaitingController {
 
         WaitingOverviewDTO waitingOverview = waitingService.getWaitingOverview(restaurantId);
 
-        CommonResp<WaitingOverviewDTO> resp = CommonResp.<WaitingOverviewDTO>builder()
-                .code(1000)
-                .message(CommonMessage.GET_WAITING_OVERVIEW_SUCC)
-                .data(waitingOverview)
-                .build();
+        CommonResp<WaitingOverviewDTO> resp = new CommonResp(
+                1000,
+                CommonMessage.GET_WAITING_OVERVIEW_SUCC,
+                waitingOverview);
 
         return ResponseEntity.status(HttpStatus.OK).body(resp);
     }
 
     @PostMapping("/restaurant/{restaurantId}/my-waiting/{waitingId}")
     public ResponseEntity<CommonResp<MyWaitingStatusDTO>> getMyRestaurantWaitingStatus(@PathVariable("restaurantId") Long restaurantId,
-                                                                                     @PathVariable("waitingId") Long waitingId,
+                                                                                       @PathVariable("waitingId") Long waitingId,
                                                                                        @RequestBody CommonWaitingReqDTO commonWaitingReq) {
 
         MyWaitingStatusDTO myWaitingStatus = waitingService.getMyWaiting(restaurantId, waitingId, commonWaitingReq);
 
-        CommonResp<MyWaitingStatusDTO> resp = CommonResp.<MyWaitingStatusDTO>builder()
-                .code(1000)
-                .message("Get My Waiting Status OK")
-                .data(myWaitingStatus)
-                .build();
+        CommonResp<MyWaitingStatusDTO> resp = new CommonResp(
+                1000,
+                "Get My Waiting Status OK"
+                ,myWaitingStatus);
 
         return ResponseEntity.status(HttpStatus.OK).body(resp);
     }

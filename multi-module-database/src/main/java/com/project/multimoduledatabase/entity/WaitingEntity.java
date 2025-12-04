@@ -12,7 +12,6 @@ import java.time.LocalTime;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class WaitingEntity {
@@ -35,6 +34,16 @@ public class WaitingEntity {
     private int waitingNumber;
     private LocalDate registeredDate;
     private LocalTime registeredTime;
+
+    public WaitingEntity(CustomerEntity customerEntity, RestaurantEntity restaurantEntity, WaitingStatus waitingStatus, int partySize, int waitingNumber, LocalDate registeredDate, LocalTime registeredTime) {
+        this.customer = customerEntity;
+        this.restaurant = restaurantEntity;
+        this.status = waitingStatus;
+        this.partySize = partySize;
+        this.waitingNumber = waitingNumber;
+        this.registeredDate = registeredDate;
+        this.registeredTime = registeredTime;
+    }
 
     public void updateStatus(WaitingStatus status) {
         this.status = status;

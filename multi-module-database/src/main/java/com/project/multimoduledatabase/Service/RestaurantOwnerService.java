@@ -52,7 +52,7 @@ public class RestaurantOwnerService {
     }
 
     @Transactional
-    public void callWaiting(WaitingCallReqDTO waitingCallReq) throws IOException {
+    public void callWaiting(WaitingCallReqDTO waitingCallReq) {
         int nextWaitingNumber = 0;
         WaitingEntity waitingEntity = waitingRepository.findById(waitingCallReq.getWaitingId())
                 .orElseThrow(() -> new IllegalArgumentException("이미 처리된 웨이팅입니다."));

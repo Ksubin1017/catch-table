@@ -35,38 +35,41 @@ public class WaitingService {
             throw new IllegalStateException("현재 영업 시간이 아닙니다.");
         }
 
-        int waitingNumber = waitingRepository.countByRegisteredDateAndRestaurant(LocalDate.now(), restaurantEntity) + 1;
+        int isApplied = waitingRepository.countByCustomer_IdAndRestaurant_IdAndStatus(customerId, restaurantId, WaitingStatus.APPLIED);
 
-        WaitingEntity savedWaiting = waitingRepository.save(WaitingEntity.builder()
-                .customer(customerEntity)
-                .restaurant(restaurantEntity)
-                .status(WaitingStatus.APPLIED)
-                .partySize(partySize)
-                .waitingNumber(waitingNumber)
-                .registeredDate(LocalDate.now())
-                .registeredTime(LocalTime.now())
-                .build());
+        if (isApplied > 0) {
+            throw new IllegalStateException("이미 등록되었습니다.");
+        }
+
+        int waitingNumber = waitingRepository.countByRegisteredDate(LocalDate.now()) + 1;
+
+        WaitingEntity savedWaiting = waitingRepository.save(new WaitingEntity(
+                customerEntity,
+                restaurantEntity,
+                WaitingStatus.APPLIED,
+                partySize,
+                waitingNumber,
+                LocalDate.now(),
+                LocalTime.now()));
 
         int remainingTeamCount = waitingRepository.countByRestaurantAndRegisteredDateAndStatusAndWaitingNumberLessThan(restaurantEntity,
                 savedWaiting.getRegisteredDate(),
                 WaitingStatus.APPLIED,
                 waitingNumber);
 
-        return WaitingRegisterRespDTO.builder()
-                .customerId(customerEntity.getId())
-                .customerName(customerEntity.getName())
-                .restaurantId(restaurantEntity.getId())
-                .restaurantName(restaurantEntity.getName())
-                .waitingId(savedWaiting.getId())
-                .waitingNumber(savedWaiting.getWaitingNumber())
-                .partySize(savedWaiting.getPartySize())
-                .status(savedWaiting.getStatus())
-                .remainingTeamCount(remainingTeamCount)
-                .estimatedWaitingTime(estimatedWaitingTime(remainingTeamCount))
-                .registeredDate(savedWaiting.getRegisteredDate())
-                .registeredTime(savedWaiting.getRegisteredTime())
-                .build();
-
+        return new WaitingRegisterRespDTO(
+                customerEntity.getId(),
+                customerEntity.getName(),
+                restaurantEntity.getId(),
+                restaurantEntity.getName(),
+                savedWaiting.getId(),
+                savedWaiting.getWaitingNumber(),
+                savedWaiting.getPartySize(),
+                savedWaiting.getStatus(),
+                remainingTeamCount,
+                estimatedWaitingTime(remainingTeamCount),
+                savedWaiting.getRegisteredDate(),
+                savedWaiting.getRegisteredTime());
     }
 
     @Transactional
@@ -80,15 +83,14 @@ public class WaitingService {
 
         waitingEntity.updateStatus(WaitingStatus.CANCELED);
 
-        return WaitingCancelRespDTO.builder()
-                .waitingId(waitingId)
-                .restaurantId(restaurantId)
-                .restaurantName(restaurantEntity.getName())
-                .customerId(commonWaitingReq.getCustomerId())
-                .customerName(customerEntity.getName())
-                .status(WaitingStatus.CANCELED)
-                .canceledAt(LocalDateTime.now())
-                .build();
+        return new WaitingCancelRespDTO(
+                waitingId,
+                restaurantId,
+                restaurantEntity.getName(),
+                commonWaitingReq.getCustomerId(),
+                customerEntity.getName(),
+                WaitingStatus.CANCELED,
+                LocalDateTime.now());
     }
 
     @Transactional(readOnly = true)
@@ -102,12 +104,11 @@ public class WaitingService {
                 WaitingStatus.APPLIED,
                 LocalDate.now());
 
-        return WaitingOverviewDTO.builder()
-                .restaurantId(restaurantId)
-                .restaurantName(restaurantEntity.getName())
-                .estimatedWaitingTime(estimatedWaitingTime(remainingTeamCount))
-                .remainingTeamCount(remainingTeamCount)
-                .build();
+        return new WaitingOverviewDTO(
+                restaurantId,
+                restaurantEntity.getName(),
+                estimatedWaitingTime(remainingTeamCount),
+                remainingTeamCount);
     }
 
     @Transactional(readOnly = true)
@@ -124,19 +125,18 @@ public class WaitingService {
                 WaitingStatus.APPLIED,
                 waitingEntity.getWaitingNumber());
 
-        return MyWaitingStatusDTO.builder()
-                .customerId(commonWaitingReq.getCustomerId())
-                .customerName(customerEntity.getName())
-                .restaurantId(restaurantId)
-                .restaurantName(restaurantEntity.getName())
-                .waitingId(waitingEntity.getId())
-                .waitingNumber(waitingEntity.getWaitingNumber())
-                .remainingTeamCount(remainingTeamCount)
-                .status(WaitingStatus.APPLIED)
-                .estimatedWaitingTime(estimatedWaitingTime(remainingTeamCount))
-                .registeredDate(waitingEntity.getRegisteredDate())
-                .registeredTime(waitingEntity.getRegisteredTime())
-                .build();
+        return new MyWaitingStatusDTO(
+                commonWaitingReq.getCustomerId(),
+                customerEntity.getName(),
+                restaurantId,
+                restaurantEntity.getName(),
+                waitingEntity.getId(),
+                waitingEntity.getWaitingNumber(),
+                remainingTeamCount,
+                WaitingStatus.APPLIED,
+                estimatedWaitingTime(remainingTeamCount),
+                waitingEntity.getRegisteredDate(),
+                waitingEntity.getRegisteredTime());
     }
 
     public boolean isRestaurantOpen(String openTime, String closeTime, LocalTime now) {
@@ -146,11 +146,11 @@ public class WaitingService {
     }
 
     public String estimatedWaitingTime(int remainingTeamCount) {
-        if(remainingTeamCount == 0) {
+        if (remainingTeamCount == 0) {
             return "현재 대기 팀이 없습니다.";
-        } else if(remainingTeamCount <= 10) {
+        } else if (remainingTeamCount <= 10) {
             return "약 30분 내 입장 가능";
-        } else if(remainingTeamCount <= 20) {
+        } else if (remainingTeamCount <= 20) {
             return "약 1시간 대기 예상";
         } else {
             return "약 2시간 이상 대기 예상";

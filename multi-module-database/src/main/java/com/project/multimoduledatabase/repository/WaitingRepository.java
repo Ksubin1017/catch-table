@@ -29,19 +29,17 @@ public interface WaitingRepository extends JpaRepository<WaitingEntity, Long> {
     int countByRestaurantAndStatusAndRegisteredDate(RestaurantEntity restaurant, WaitingStatus status, LocalDate registeredDate);
 
     // 웨이팅 번호 발급
-    int countByRegisteredDateAndRestaurant(LocalDate date, RestaurantEntity restaurant);
+    int countByRegisteredDate(LocalDate date);
 
     Optional<WaitingEntity> findByIdAndStatus(Long waitingId, WaitingStatus waitingStatus);
     WaitingEntity findByCustomer_Id(Long customerId);
 
+    int countByCustomer_IdAndRestaurant_IdAndStatus(Long customerId, Long restaurantId, WaitingStatus waitingStatus);
+
     // 하루 총 대기 팀 수
     int countByRestaurantAndRegisteredDate(RestaurantEntity restaurant, LocalDate registeredDate);
 
-    Optional<WaitingEntity> findTopByRestaurantIdAndRegisteredDateOrderByWaitingNumberDesc(Long restaurantId, LocalDate registeredDate);
-
     List<WaitingEntity> findByRestaurantIdAndStatusOrderByWaitingNumberAsc(Long restaurantId, WaitingStatus status);
-
-    WaitingEntity findByRestaurantIdAndCustomer_IdAndStatus(Long restaurantId, Long customerId, WaitingStatus status);
 
     WaitingEntity findByRestaurantIdAndWaitingNumberAndStatus(Long restaurantId, int waitingNumber, WaitingStatus status);
 }
