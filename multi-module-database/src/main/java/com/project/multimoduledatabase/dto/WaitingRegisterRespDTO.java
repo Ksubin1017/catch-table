@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class WaitingRegisterRespDTO {

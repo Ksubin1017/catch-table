@@ -39,4 +39,7 @@ public class RestaurantEntity {
 
     @Column(name = "close_time", nullable = false)
     private String closeTime;
+
+    @Column(name = "webhook_url")
+    private String webhookUrl;
 }

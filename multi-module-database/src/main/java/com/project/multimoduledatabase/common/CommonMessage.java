@@ -18,4 +18,8 @@ public class CommonMessage {
 
     public static final String GET_MY_WAITING_STATUS_SUCC = "Get My Waiting Status Success";
 
+    public static final String GET_RESTAURANT_STATUS_OWNER_SUCC = "Get Restaurant Status Owner Success";
+
+    public static final String CALL_WAITING_SUCC = "Call Waiting Success";
+    public static final String CALL_WAITING_FAIL = "Call Waiting FAIL";
 }
