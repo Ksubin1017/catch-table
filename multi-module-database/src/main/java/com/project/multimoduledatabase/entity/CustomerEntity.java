@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerEntity {
@@ -23,4 +22,8 @@ public class CustomerEntity {
     private String name;
 
     private String email;
+
+    public CustomerEntity(String name) {
+        this.name = name;
+    }
 }

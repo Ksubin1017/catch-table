@@ -8,15 +8,14 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantDetailDTO {
 
     private Long id;
-    private String image;
     private String name;
     private String addr;
+    private String image;
     private List<MenuDTO> menuList;
     private Boolean isOpen;
     private BusinessHoursDTO businessHours;

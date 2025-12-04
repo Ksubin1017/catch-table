@@ -87,7 +87,7 @@ public class RestaurantServiceTest {
         Long restaurantId = 1L;
         RestaurantEntity restaurant = restaurantDataById.get(restaurantId);
         List<MenuEntity> menuList = Arrays.asList(
-                MenuEntity.builder().id(1L).name("김치찌개").price(8000).build()
+                new MenuEntity(1L, "김치찌개",  8000, "image", restaurant)
         );
         
         given(restaurantRepository.findById(restaurantId)).willReturn(Optional.of(restaurant));
@@ -104,49 +104,53 @@ public class RestaurantServiceTest {
     }
 
     private void initTestData() {
-        RestaurantEntity restaurant1 = RestaurantEntity.builder()
-                .id(1L)
-                .name("맛있는 한식당")
-                .addr("서울시 강남구")
-                .image("image1.jpg")
-                .category(RestaurantCategory.KOREAN)
-                .price(20000)
-                .openTime("09:00")
-                .closeTime("22:00")
-                .build();
+        RestaurantEntity restaurant1 = new RestaurantEntity(
+                1L,
+                "맛있는 한식당",
+                "서울시 강남구",
+                "image1.jpg",
+                RestaurantCategory.KOREAN,
+                20000,
+                "09:00",
+                "22:00",
+                "맛있는 한식당"
+        );
 
-        RestaurantEntity restaurant2 = RestaurantEntity.builder()
-                .id(2L)
-                .name("전통 한식집")
-                .addr("서울시 서초구")
-                .image("image2.jpg")
-                .category(RestaurantCategory.KOREAN)
-                .price(15000)
-                .openTime("10:00")
-                .closeTime("21:00")
-                .build();
 
-        RestaurantEntity restaurant3 = RestaurantEntity.builder()
-                .id(3L)
-                .name("이탈리안 레스토랑")
-                .addr("서울시 종로구")
-                .image("image3.jpg")
-                .category(RestaurantCategory.WESTERN)
-                .price(20000)
-                .openTime("11:00")
-                .closeTime("23:00")
-                .build();
+        RestaurantEntity restaurant2 = new RestaurantEntity(
+                2L,
+                "전통 한식집",
+                "서울시 서초구",
+                "image2.jpg",
+                RestaurantCategory.KOREAN,
+                15000,
+                "10:00",
+                "21:00",
+                "전통 한식집"
+        );
 
-        RestaurantEntity restaurant4 = RestaurantEntity.builder()
-                .id(4L)
-                .name("스시 전문점")
-                .addr("서울시 마포구")
-                .image("image4.jpg")
-                .category(RestaurantCategory.JAPANESE)
-                .price(50000)
-                .openTime("12:00")
-                .closeTime("22:00")
-                .build();
+        RestaurantEntity restaurant3 = new RestaurantEntity(
+                3L,
+                "이탈리안 레스토랑",
+                "서울시 종로구",
+                "image3.jpg",
+                RestaurantCategory.WESTERN,
+                20000,
+                "11:00",
+                "23:00",
+                "이탈리안 레스토랑");
+
+        RestaurantEntity restaurant4 = new RestaurantEntity(
+                4L,
+                "스시 전문점",
+                "서울시 마포구",
+                "image4.jpg",
+                RestaurantCategory.JAPANESE,
+                50000,
+                "12:00",
+                "22:00",
+                "스시 전문점");
+
 
         restaurantDataByCategory.put("한식", Arrays.asList(restaurant1, restaurant2));
         restaurantDataByCategory.put("양식", Arrays.asList(restaurant3));

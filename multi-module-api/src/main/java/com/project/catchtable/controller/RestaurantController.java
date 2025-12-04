@@ -25,11 +25,10 @@ public class RestaurantController {
 
         List<RestaurantListItemDTO> restaurantList = restaurantService.getRestaurantList(category);
 
-        CommonResp<List<RestaurantListItemDTO>> resp = CommonResp.<List<RestaurantListItemDTO>>builder()
-                .code(1000)
-                .message(CommonMessage.GET_RESTAURANT_BY_CATEGORY_SUCC)
-                .data(restaurantList)
-                .build();
+        CommonResp<List<RestaurantListItemDTO>> resp = new CommonResp<>(
+                1000,
+                CommonMessage.GET_RESTAURANT_BY_CATEGORY_SUCC,
+                restaurantList);
 
         return ResponseEntity.status(HttpStatus.OK).body(resp);
     }
@@ -39,11 +38,10 @@ public class RestaurantController {
 
         RestaurantDetailDTO restaurantDetailDTO = restaurantService.getRestaurantDetail(restaurantId);
 
-        CommonResp<RestaurantDetailDTO> resp = CommonResp.<RestaurantDetailDTO>builder()
-                .code(1000)
-                .message(CommonMessage.GET_RESTAURANT_DETAIL_SUCC)
-                .data(restaurantDetailDTO)
-                .build();
+        CommonResp<RestaurantDetailDTO> resp = new CommonResp<>(
+                1000,
+                CommonMessage.GET_RESTAURANT_DETAIL_SUCC,
+                restaurantDetailDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(resp);
     }

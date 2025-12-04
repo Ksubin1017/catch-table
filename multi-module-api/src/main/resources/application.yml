@@ -17,9 +17,3 @@ spring:
         format_sql: true
         show_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
-
-slack:
-  channel:
-    restaurant1: "한촌"
-    restaurant2: "츠케루"
-    restaurant3: "이태리"
