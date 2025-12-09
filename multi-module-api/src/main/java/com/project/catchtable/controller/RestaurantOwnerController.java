@@ -13,22 +13,39 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @RequiredArgsConstructor
 public class RestaurantOwnerController {
 
     private final RestaurantOwnerService restaurantOwnerService;
 
+//    @GetMapping("/restaurant/{restaurantId}/waiting/status/owner")
+//    public ResponseEntity<CommonResp<RestaurantWaitingStatusOwnerDTO>> getRestaurantStatusOwner(@PathVariable(name = "restaurantId") Long restaurantId) {
+//
+//        CommonResp<RestaurantWaitingStatusOwnerDTO> resp = new CommonResp<>(
+//                1000,
+//                CommonMessage.GET_RESTAURANT_STATUS_OWNER_SUCC,
+//                restaurantOwnerService.getRestaurantWaitingStatusOwner(restaurantId)
+//        );
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(resp);
+//    }
+
     @GetMapping("/restaurant/{restaurantId}/waiting/status/owner")
-    public ResponseEntity<CommonResp<RestaurantWaitingStatusOwnerDTO>> getRestaurantStatusOwner(@PathVariable(name = "restaurantId") Long restaurantId) {
+    public CompletableFuture<ResponseEntity<CommonResp<RestaurantWaitingStatusOwnerDTO>>> getRestaurantStatusOwner(
+            @PathVariable(name = "restaurantId") Long restaurantId) {
 
-        CommonResp<RestaurantWaitingStatusOwnerDTO> resp = new CommonResp<>(
-                1000,
-                CommonMessage.GET_RESTAURANT_STATUS_OWNER_SUCC,
-                restaurantOwnerService.getRestaurantWaitingStatusOwner(restaurantId)
-        );
-
-        return ResponseEntity.status(HttpStatus.OK).body(resp);
+        return restaurantOwnerService.getRestaurantWaitingStatusOwner(restaurantId)
+                .thenApply(dto -> {
+                    CommonResp<RestaurantWaitingStatusOwnerDTO> resp = new CommonResp<>(
+                            1000,
+                            CommonMessage.GET_RESTAURANT_STATUS_OWNER_SUCC,
+                            dto
+                    );
+                    return ResponseEntity.status(HttpStatus.OK).body(resp);
+                });
     }
 
     @PostMapping("/waiting/call")

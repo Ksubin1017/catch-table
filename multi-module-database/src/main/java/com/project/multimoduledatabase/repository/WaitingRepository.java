@@ -39,7 +39,7 @@ public interface WaitingRepository extends JpaRepository<WaitingEntity, Long> {
     // 하루 총 대기 팀 수
     int countByRestaurantAndRegisteredDate(RestaurantEntity restaurant, LocalDate registeredDate);
 
-    List<WaitingEntity> findByRestaurantIdAndStatusOrderByWaitingNumberAsc(Long restaurantId, WaitingStatus status);
+    List<WaitingEntity> findByRestaurantIdAndStatusAndRegisteredDateOrderByWaitingNumberAsc(Long restaurantId, WaitingStatus status, LocalDate registeredDate);
 
     WaitingEntity findByRestaurantIdAndWaitingNumberAndStatus(Long restaurantId, int waitingNumber, WaitingStatus status);
 }

@@ -23,7 +23,7 @@ public class WaitingController {
                 , waitingRegisterReq.getCustomerId()
                 , waitingRegisterReq.getPartySize());
 
-        CommonResp<WaitingRegisterRespDTO> resp = new CommonResp(
+        CommonResp<WaitingRegisterRespDTO> resp = new CommonResp<>(
                 1000,
                 CommonMessage.REGISTER_WAITING_SUCC,
                 waitingRegisterResp);
@@ -32,13 +32,11 @@ public class WaitingController {
     }
 
     @PostMapping("/restaurant/{restaurantId}/waiting/{waitingId}/cancel")
-    public ResponseEntity<CommonResp<WaitingCancelRespDTO>> cancelWaiting(@PathVariable("restaurantId") Long restaurantId,
-                                                                          @PathVariable("waitingId") Long waitingId,
-                                                                          @RequestBody CommonWaitingReqDTO waitingCancel) {
+    public ResponseEntity<CommonResp<WaitingCancelRespDTO>> cancelWaiting(@PathVariable("waitingId") Long waitingId) {
 
-        WaitingCancelRespDTO waitingCancelResp = waitingService.cancelWaiting(restaurantId, waitingId, waitingCancel);
+        WaitingCancelRespDTO waitingCancelResp = waitingService.cancelWaiting(waitingId);
 
-        CommonResp<WaitingCancelRespDTO> resp = new CommonResp(
+        CommonResp<WaitingCancelRespDTO> resp = new CommonResp<>(
                 1000,
                 CommonMessage.CANCEL_WAITING_SUCC,
                 waitingCancelResp);
@@ -51,7 +49,7 @@ public class WaitingController {
 
         WaitingOverviewDTO waitingOverview = waitingService.getWaitingOverview(restaurantId);
 
-        CommonResp<WaitingOverviewDTO> resp = new CommonResp(
+        CommonResp<WaitingOverviewDTO> resp = new CommonResp<>(
                 1000,
                 CommonMessage.GET_WAITING_OVERVIEW_SUCC,
                 waitingOverview);
@@ -66,7 +64,7 @@ public class WaitingController {
 
         MyWaitingStatusDTO myWaitingStatus = waitingService.getMyWaiting(restaurantId, waitingId, commonWaitingReq);
 
-        CommonResp<MyWaitingStatusDTO> resp = new CommonResp(
+        CommonResp<MyWaitingStatusDTO> resp = new CommonResp<>(
                 1000,
                 "Get My Waiting Status OK"
                 ,myWaitingStatus);
