@@ -72,25 +72,13 @@ public class WaitingService {
                 savedWaiting.getRegisteredTime());
     }
 
-    @Transactional
-    public WaitingCancelRespDTO cancelWaiting(Long restaurantId, Long waitingId, CommonWaitingReqDTO commonWaitingReq) {
+    public WaitingCancelRespDTO cancelWaiting(Long waitingId) {
         WaitingEntity waitingEntity = waitingRepository.findByIdAndStatus(waitingId, WaitingStatus.APPLIED)
                 .orElseThrow(() -> new IllegalArgumentException("이미 처리된 웨이팅입니다."));
-        CustomerEntity customerEntity = customerRepository.findById(commonWaitingReq.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 고객입니다."));
-        RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 식당입니다."));
 
         waitingEntity.updateStatus(WaitingStatus.CANCELED);
 
-        return new WaitingCancelRespDTO(
-                waitingId,
-                restaurantId,
-                restaurantEntity.getName(),
-                commonWaitingReq.getCustomerId(),
-                customerEntity.getName(),
-                WaitingStatus.CANCELED,
-                LocalDateTime.now());
+        return WaitingCancelRespDTO.from(waitingEntity);
     }
 
     @Transactional(readOnly = true)

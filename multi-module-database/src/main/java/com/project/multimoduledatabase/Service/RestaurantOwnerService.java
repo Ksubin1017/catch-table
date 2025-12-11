@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -27,28 +28,45 @@ public class RestaurantOwnerService {
     private final WaitingRepository waitingRepository;
     private final SlackService slackService;
 
-    public RestaurantWaitingStatusOwnerDTO getRestaurantWaitingStatusOwner(Long restaurantId) {
+    public CompletableFuture<RestaurantWaitingStatusOwnerDTO> getRestaurantWaitingStatusOwner(Long restaurantId) {
         RestaurantEntity restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found Restaurant" + restaurantId));
 
-        List<WaitingEntity> waitingList = waitingRepository.findByRestaurantIdAndStatusOrderByWaitingNumberAsc(restaurantId, WaitingStatus.APPLIED);
-
-        List<WaitingOverviewOwnerDTO> waitingOverviews = waitingList.stream()
-                .map(waitingEntity -> new WaitingOverviewOwnerDTO(
-                        waitingEntity.getCustomer().getId(),
-                        waitingEntity.getCustomer().getName(),
-                        waitingEntity.getWaitingNumber(),
-                        waitingEntity.getRegisteredDate(),
-                        waitingEntity.getRegisteredTime()
-                )).toList();
-
-        return new RestaurantWaitingStatusOwnerDTO(
-                restaurantId,
-                restaurant.getName(),
-                waitingRepository.countByRestaurantAndRegisteredDate(restaurant, LocalDate.now()),
-                waitingRepository.countByRestaurantAndStatusAndRegisteredDate(restaurant, WaitingStatus.APPLIED, LocalDate.now()),
-                waitingOverviews
+        CompletableFuture<List<WaitingEntity>> waitingListFuture = CompletableFuture.supplyAsync(() ->
+                waitingRepository.findByRestaurantIdAndStatusAndRegisteredDateOrderByWaitingNumberAsc(restaurantId, WaitingStatus.APPLIED, LocalDate.now())
         );
+
+        CompletableFuture<Integer> totalWaitingCountFuture = CompletableFuture.supplyAsync(() ->
+                        waitingRepository.countByRestaurantAndRegisteredDate(restaurant, LocalDate.now())
+        );
+
+        CompletableFuture<Integer> currentWaitingCountFuture = CompletableFuture.supplyAsync(() ->
+                waitingRepository.countByRestaurantAndStatusAndRegisteredDate(restaurant, WaitingStatus.APPLIED, LocalDate.now())
+        );
+
+        return CompletableFuture.allOf(waitingListFuture, totalWaitingCountFuture, currentWaitingCountFuture)
+                .thenApply(v -> {
+                    List<WaitingEntity> waitingList = waitingListFuture.join();
+                    int totalWaitingCount = totalWaitingCountFuture.join();
+                    int currentWaitingCount = currentWaitingCountFuture.join();
+
+                    List<WaitingOverviewOwnerDTO> waitingOverviews = waitingList.stream()
+                            .map(waitingEntity -> new WaitingOverviewOwnerDTO(
+                                    waitingEntity.getCustomer().getId(),
+                                    waitingEntity.getCustomer().getName(),
+                                    waitingEntity.getWaitingNumber(),
+                                    waitingEntity.getRegisteredDate(),
+                                    waitingEntity.getRegisteredTime()
+                            )).toList();
+
+                    return new RestaurantWaitingStatusOwnerDTO(
+                            restaurantId,
+                            restaurant.getName(),
+                            totalWaitingCount,
+                            currentWaitingCount,
+                            waitingOverviews
+                    );
+                });
     }
 
     @Transactional
@@ -56,8 +74,6 @@ public class RestaurantOwnerService {
         int nextWaitingNumber = 0;
         WaitingEntity waitingEntity = waitingRepository.findById(waitingCallReq.getWaitingId())
                 .orElseThrow(() -> new IllegalArgumentException("이미 처리된 웨이팅입니다."));
-
-        CustomerEntity customer = waitingEntity.getCustomer();
 
         if (waitingEntity.getStatus().equals(WaitingStatus.CALLED)) {
             throw new IllegalStateException("이미 호명된 고객입니다.");

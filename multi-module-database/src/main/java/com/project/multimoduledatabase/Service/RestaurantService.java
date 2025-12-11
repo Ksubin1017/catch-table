@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,11 +50,23 @@ public class RestaurantService {
 
     @Transactional(readOnly = true)
     public RestaurantDetailDTO getRestaurantDetail(Long restaurantId) {
-        RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found Restaurant" + restaurantId));
+        CompletableFuture<RestaurantEntity> restaurantFuture =
+                CompletableFuture.supplyAsync(() -> restaurantRepository.findById(restaurantId)
+                        .orElseThrow(() -> new IllegalArgumentException("Not Found Restaurant" + restaurantId)));
 
-        List<MenuEntity> menuEntityList = menuRepository.findByRestaurant_id(restaurantId)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found Menu" + restaurantId));
+        CompletableFuture<List<MenuEntity>> menuFuture =
+                CompletableFuture.supplyAsync(() -> menuRepository.findByRestaurant_id(restaurantId)
+                        .orElseThrow(() -> new IllegalArgumentException("Not Found Restaurant" + restaurantId)));
+
+//        RestaurantEntity restaurantEntity = restaurantRepository.findById(restaurantId)
+//                .orElseThrow(() -> new IllegalArgumentException("Not Found Restaurant" + restaurantId));
+
+//        List<MenuEntity> menuEntityList = menuRepository.findByRestaurant_id(restaurantId)
+//                .orElseThrow(() -> new IllegalArgumentException("Not Found Menu" + restaurantId));
+
+        CompletableFuture.allOf(restaurantFuture, menuFuture).join();
+        RestaurantEntity restaurantEntity = restaurantFuture.join();
+        List<MenuEntity> menuEntityList = menuFuture.join();
 
         List<MenuDTO> menuList = menuEntityList.stream()
                 .map(menuEntity -> new MenuDTO(
