@@ -1,6 +1,6 @@
 package com.project.catchtable.controller;
 
-import com.project.multimoduledatabase.Service.RestaurantService;
+import com.project.multimoduledatabase.service.RestaurantService;
 import com.project.multimoduledatabase.common.CommonMessage;
 import com.project.multimoduledatabase.common.CommonResp;
 import com.project.multimoduledatabase.dto.*;
