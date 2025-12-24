@@ -1,3 +1,4 @@
 rootProject.name = 'catch-table'
 include 'multi-module-api'
 include 'multi-module-database'
+include 'kafka-consumer'

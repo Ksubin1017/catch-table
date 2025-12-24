@@ -1,6 +1,6 @@
 package com.project.catchtable.controller;
 
-import com.project.multimoduledatabase.Service.WaitingService;
+import com.project.multimoduledatabase.service.WaitingService;
 import com.project.multimoduledatabase.common.CommonCode;
 import com.project.multimoduledatabase.common.CommonResp;
 import com.project.multimoduledatabase.dto.*;
@@ -17,8 +17,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

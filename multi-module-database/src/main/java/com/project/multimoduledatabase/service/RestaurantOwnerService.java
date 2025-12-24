@@ -1,21 +1,17 @@
-package com.project.multimoduledatabase.Service;
+package com.project.multimoduledatabase.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.multimoduledatabase.dto.RestaurantWaitingStatusOwnerDTO;
 import com.project.multimoduledatabase.dto.WaitingCallReqDTO;
 import com.project.multimoduledatabase.dto.WaitingOverviewOwnerDTO;
-import com.project.multimoduledatabase.entity.CustomerEntity;
 import com.project.multimoduledatabase.entity.RestaurantEntity;
 import com.project.multimoduledatabase.entity.WaitingEntity;
 import com.project.multimoduledatabase.enums.WaitingStatus;
 import com.project.multimoduledatabase.repository.RestaurantRepository;
 import com.project.multimoduledatabase.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

@@ -1,0 +1,25 @@
+plugins {
+    id("java-common-conventions")
+    id("org.springframework.boot")
+}
+
+dependencies {
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // 슬랙
+    implementation("com.slack.api:bolt:1.18.0")
+    implementation("com.slack.api:bolt-servlet:1.18.0")
+    implementation("com.slack.api:bolt-jetty:1.18.0")
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+}
+
+tasks.named('bootJar') {
+    enabled = false
+}
+
+tasks.named('jar') {
+    enabled = true
+}
+
+tasks.register("prepareKotlinBuildScriptModel"){}

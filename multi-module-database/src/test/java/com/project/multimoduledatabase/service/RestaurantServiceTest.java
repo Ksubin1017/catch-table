@@ -1,6 +1,5 @@
 package com.project.multimoduledatabase.service;
 
-import com.project.multimoduledatabase.Service.RestaurantService;
 import com.project.multimoduledatabase.dto.RestaurantDetailDTO;
 import com.project.multimoduledatabase.dto.RestaurantListItemDTO;
 import com.project.multimoduledatabase.entity.MenuEntity;
