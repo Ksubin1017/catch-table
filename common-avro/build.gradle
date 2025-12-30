@@ -1,0 +1,26 @@
+plugins {
+	id("java-common-conventions")
+	id("com.github.davidmc24.gradle.plugin.avro") version "1.9.1"
+}
+
+dependencies {
+	implementation 'org.apache.avro:avro:1.11.3'
+}
+
+avro {
+	createSetters = true
+	fieldVisibility = "PRIVATE"
+}
+
+generateAvroJava {
+	source = file("src/main/avro")
+	outputDir = file("build/generated-main-avro-java")
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir 'build/generated-main-avro-java'
+		}
+	}
+}

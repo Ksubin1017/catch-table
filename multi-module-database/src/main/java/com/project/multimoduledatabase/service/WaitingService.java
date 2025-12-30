@@ -40,7 +40,7 @@ public class WaitingService {
             throw new IllegalStateException("이미 등록되었습니다.");
         }
 
-        int waitingNumber = waitingRepository.countByRegisteredDate(LocalDate.now()) + 1;
+        int waitingNumber = waitingRepository.countByRestaurantAndRegisteredDate(restaurantEntity, LocalDate.now()) + 1;
 
         WaitingEntity savedWaiting = waitingRepository.save(new WaitingEntity(
                 customerEntity,

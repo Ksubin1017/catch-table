@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "WaitingCall",
+  "namespace": "com.project.catchtable.avro",
+  "fields": [
+    {"name": "restaurantName", "type": "string"},
+    {"name": "waitingNumber", "type": "int"},
+    {"name": "nextWaitingNumber", "type": "int"},
+    {"name": "webhookUrl", "type": "string"}
+  ]
+}
+

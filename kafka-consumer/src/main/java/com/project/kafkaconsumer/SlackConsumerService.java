@@ -1,5 +1,6 @@
 package com.project.kafkaconsumer;
 
+import com.project.catchtable.avro.WaitingCall;
 import com.slack.api.Slack;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -12,21 +13,19 @@ public class SlackConsumerService {
             topics = "waiting-call-slack",
             groupId = "slack-send-group"
     )
-    public void comsume(String message) {
-        SlackConsumerDTO slackConsumer = SlackConsumerDTO.fromJson(message);
-        System.out.println(slackConsumer.toString());
+    public void comsume(WaitingCall waitingCall) {
         try {
             Slack slack = Slack.getInstance();
 
-            String payload = "{\"text\": \"" + "[" + slackConsumer.getRestaurantName() + "]"
-                    + "\n" + slackConsumer.getWaitingNumber() + "번 고객님, 입장해주세요." + "\"}";
-            slack.send(slackConsumer.getWebhookUrl(), payload);
+            String payload = "{\"text\": \"" + "[" + waitingCall.getRestaurantName() + "]"
+                    + "\n" + waitingCall.getWaitingNumber() + "번 고객님, 입장해주세요." + "\"}";
+            slack.send(waitingCall.getWebhookUrl(), payload);
 
-            if (slackConsumer.getNextWaitingNumber() != 0) {
+            if (waitingCall.getNextWaitingNumber() != 0) {
                 String payload2 = "{\"text\": \""
-                        + "[" + slackConsumer.getRestaurantName() + "]\\n"
-                        + slackConsumer.getNextWaitingNumber() + "번 고객님, 다음 차례 입장입니다. 앞에서 대기해주세요.\"}";
-                slack.send(slackConsumer.getWebhookUrl(), payload2);
+                        + "[" + waitingCall.getRestaurantName() + "]\\n"
+                        + waitingCall.getNextWaitingNumber() + "번 고객님, 다음 차례 입장입니다. 앞에서 대기해주세요.\"}";
+                slack.send(waitingCall.getWebhookUrl(), payload2);
             }
 
         } catch (IOException e) {

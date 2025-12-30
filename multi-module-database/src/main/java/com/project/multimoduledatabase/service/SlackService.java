@@ -2,6 +2,7 @@ package com.project.multimoduledatabase.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.catchtable.avro.WaitingCall;
 import com.project.multimoduledatabase.dto.SlackSendDTO;
 import com.project.multimoduledatabase.entity.RestaurantEntity;
 import lombok.RequiredArgsConstructor;
@@ -13,29 +14,22 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class SlackService {
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, WaitingCall> kafkaTemplate;
     public void sendMessage(RestaurantEntity restaurant, int waitingNumber, int nextWaitingNumber, String webhookUrl) {
-        SlackSendDTO slackSend = new SlackSendDTO(restaurant.getName(), waitingNumber, nextWaitingNumber, webhookUrl);
+        WaitingCall waitingCall = WaitingCall.newBuilder()
+                .setRestaurantName(restaurant.getName())
+                .setWaitingNumber(waitingNumber)
+                .setNextWaitingNumber(nextWaitingNumber)
+                .setWebhookUrl(webhookUrl)
+                .build();
 
-        this.kafkaTemplate.send("waiting-call-slack", toJsonString(slackSend));
-
-//        try {
-//            Slack slack = Slack.getInstance();
-//
-//            String payload = "{\"text\": \"" + "[" + restaurant.getName() + "]"
-//                    + "\n" + waitingNumber + "번 고객님, 입장해주세요." + "\"}";
-//            slack.send(webhookUrl, payload);
-//
-//            if (nextWaitingNumber != 0) {
-//                String payload2 = "{\"text\": \""
-//                        + "[" + restaurant.getName() + "]\\n"
-//                        + nextWaitingNumber + "번 고객님, 다음 차례 입장입니다. 앞에서 대기해주세요.\"}";
-//                slack.send(webhookUrl, payload2);
-//            }
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException("Slack 메시지 전송 실패: " + e.getMessage(), e);
-//        }
+        try {
+            kafkaTemplate.send("waiting-call-slack", waitingCall);
+            log.info("Kafka message sent successfully: {}", waitingCall);
+        } catch (Exception e) {
+            log.error("Failed to send Kafka message: {}", e.getMessage(), e);
+            throw new RuntimeException("Kafka 메시지 전송 실패", e);
+        }
     }
 
     private String toJsonString(Object object) {
