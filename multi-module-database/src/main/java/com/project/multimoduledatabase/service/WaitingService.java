@@ -1,4 +1,4 @@
-package com.project.multimoduledatabase.Service;
+package com.project.multimoduledatabase.service;
 
 import com.project.multimoduledatabase.dto.*;
 import com.project.multimoduledatabase.entity.CustomerEntity;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Service
